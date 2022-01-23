@@ -93,11 +93,10 @@ public class GameDataDto {
 			return false;
 		return true;
 	}
-
+	
 	@Override
 	public String toString() {
-		return day + " : " + game1 + "%\t" + game2 + "%\t" + game3 + "%\t"
-				+ game4 + "%\t" + game5 + "%";
+		return String.format("%s : %3.2f%%  %3.2f%%  %3.2f%%  %3.2f%%  %3.2f%%",day,game1,game2,game3,game4,game5);
 	}
 	
 	
