@@ -12,12 +12,14 @@ public class DaoTest {
 	public static void main(String[] args) {
 		UserDao dao = new UserDao();
 		
+		System.out.println("================== roadUser Test ==================");
 		dao.roadUser();
-		
 		for(UserDto dto : dao.userVector) {
 			System.out.println(dto);
 		}
 		
+		
+		System.out.println("================= roadGameData Test =================");
 		dao.roadGameData();
 		
 //		System.out.println(dao.userData);

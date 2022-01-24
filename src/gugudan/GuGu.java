@@ -56,7 +56,7 @@ class 문제 {
 			if (p == i) {
 				보기배열[i] = 정답;
 			} else {
-				보기배열[i] = (int) (Math.random() * 100000 % 40);
+				보기배열[i] = (int) ((Math.random() * 100000) % 40);
 			}
 		}
 	}
