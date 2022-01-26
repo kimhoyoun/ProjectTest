@@ -1,9 +1,13 @@
 package org.model;
 
+import java.io.Externalizable;
+import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectOutput;
 import java.util.Date;
 import java.util.HashMap;
 
-public class UserDto {
+public class UserDto implements Externalizable {
 	private int no;
 	private String name;
 	private String id;
@@ -62,11 +66,14 @@ public class UserDto {
 		this.age = age;
 	}
 
+	
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((password == null) ? 0 : password.hashCode());
 		return result;
 	}
 
@@ -84,12 +91,34 @@ public class UserDto {
 				return false;
 		} else if (!id.equals(other.id))
 			return false;
+		if (password == null) {
+			if (other.password != null)
+				return false;
+		} else if (!password.equals(other.password))
+			return false;
 		return true;
 	}
 
 	@Override
 	public String toString() {
 		return no + "\t" + name + "\t" + id + "\t" + age;
+	}
+
+	@Override
+	public void writeExternal(ObjectOutput out) throws IOException {
+		out.writeUTF(name);
+		out.writeUTF(id);
+		out.writeUTF(password);
+		out.write(age);
+	}
+
+	@Override
+	public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
+		no = in.read();
+		name = in.readUTF();
+		id = in.readUTF();
+		password = in.readUTF();
+		age = in.read();
 	}
 	
 	

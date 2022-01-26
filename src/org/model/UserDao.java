@@ -187,7 +187,7 @@ public class UserDao {
 		}
 		return false;
 	}
-	// user 정보 변경
+	// user 정보 삭제
 		// DELETE = "DELETE FROM USER WHERE ID = ?";
 		public boolean deleteUser(UserDto dto) {
 			conn = ConnectionDB.getConnection();
@@ -219,7 +219,24 @@ public class UserDao {
 			}
 			return false;
 		}
+		// 로그인 승인
+		// 아이디 비밀번호 일치하는 객체가 있으면 true 반환
+		public boolean loginApproval(UserDto dto) {
+			if(userVector.contains(dto)) {
+				return true;
+			}
+			return false;
+		}
 		
+		// ID 중복체크
+		public boolean checkID(String userID) {
+			for(int i= 0; i<userVector.size(); i++) {
+				if(userID.equals(userVector.get(i).getId())){
+					return false;
+				}
+			}
+			return true;
+		}
 		
 	// 모든 user의 gameData 읽어옴.
 	public void roadGameData() {

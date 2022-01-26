@@ -11,10 +11,11 @@ import javax.swing.JLabel;
 import static org.view.Vr.*;
 
 public class MainFrame extends JFrame{
+	int width = 1024, height = 768;
 	Container contentPane;
 	public MainFrame() {
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
-		this.setSize(1080,720);
+		this.setSize(width,height);
 		contentPane = getContentPane();
 //		contentPane.setSize(1040, 780);
 //		ImageIcon backgroundImg = new ImageIcon("mainBack.png");
@@ -23,7 +24,7 @@ public class MainFrame extends JFrame{
 		
 		
 		contentPane.setLayout(null);
-		lv.setBounds(0,0,1080,720);
+		lv.setBounds(0,0,width,height);
 		contentPane.add(lv);
 //		background.setBounds(0,0,1080,720);
 //		contentPane.add(background);
@@ -38,3 +39,13 @@ public class MainFrame extends JFrame{
 
 
 }
+
+
+		
+	
+		
+		
+
+
+
+
