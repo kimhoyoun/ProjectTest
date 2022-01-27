@@ -1,5 +1,7 @@
 package org.client;
 
+import static org.view.Vr.gc;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -11,6 +13,8 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
+import org.server.MainFrame;
+
 public class GameClient{
 	private Socket socket = null;		
 	public BufferedReader br = null;
@@ -18,6 +22,7 @@ public class GameClient{
 	public ObjectInputStream ois = null;
 	public ObjectOutputStream oos = null;
 	public String msg;
+	public String req;
 	public GameClient() {
 		connectServer();
 		
@@ -47,10 +52,19 @@ public class GameClient{
 		public void run() {
 			try {
 				msg = br.readLine();
+				
+				switch(msg) {
+				
+				}
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
+	}
+	
+	public static void main(String[] args) {
+		new MainFrame();
+		gc = new GameClient();
 	}
 }

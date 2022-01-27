@@ -1,6 +1,8 @@
-package org.model;
+package org.server;
 
-public class GameDataDto {
+import java.io.Serializable;
+
+public class GameDataDto implements Serializable{
 	String id;
 	int ansGame1;
 	int totalGame1;

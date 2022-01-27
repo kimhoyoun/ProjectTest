@@ -9,6 +9,8 @@ import java.util.HashMap;
 import java.util.Vector;
 
 import org.db.ConnectionDB;
+import org.server.GameDataDto;
+import org.server.UserDto;
 
 public class UserDao {
 	// user table의 모든 데이터 갖고오기
@@ -25,6 +27,7 @@ public class UserDao {
 
 	// gamedata table에서 userID로 검색하여 해당 유저의 모든 게임 데이터를 가져옴.
 	public static final String SELECT_DATA_ALL = "select ansgame1, totalgame1, ansgame2, totalgame2, ansgame3, totalgame3, ansgame4, totalgame4, ansgame5, totalgame5, day from gamedata where id = ?";
+	public static final String SELECT_DATA_ONE = "select ansgame1, totalgame1, ansgame2, totalgame2, ansgame3, totalgame3, ansgame4, totalgame4, ansgame5, totalgame5, day from gamedata where id = ?";
 	// game을 종료할 때 모든 당일의 게임 정답률 data를 gamedata table에 저장.
 	public static final String INSERT_DATA = "INSERT INTO GAMEDATA (id, ansgame1, totalgame1, ansgame2, totalgame2, ansgame3, totalgame3, ansgame4, totalgame4, ansgame5, totalgame5, DAY) VALUES(?,?,?,?,?,?,?,?,?,?,?,?)";
 	public static final String UPDATE_DATA = "UPDATE gamedata set ansgame1 = ? , totalgame1 = ?, ansgame2 = ?, totalgame2 = ?, ansgame3=?, totalgame3=?, ansgame4=?, totalgame4=?, ansgame5=?, totalgame5=? where id = ? and day = ?";
@@ -95,7 +98,7 @@ public class UserDao {
 				String name = rs.getString(2);
 				String id = rs.getString(3);
 				String password = rs.getString(4);
-				int age = rs.getInt(6);
+				int age = rs.getInt(5);
 				
 				user = new UserDto(no,name, id, name, age);
 			}
@@ -278,6 +281,43 @@ public class UserDao {
 		}
 	}
 
+	public Vector<GameDataDto> roadOneGameData(UserDto dto) {
+		conn = ConnectionDB.getConnection();
+
+			Vector<GameDataDto> vector = new Vector<>();
+			try {
+				pstmt = conn.prepareStatement(SELECT_DATA_ONE);
+				pstmt.setString(1, dto.getId());
+				rs = pstmt.executeQuery();
+
+				while (rs.next()) {
+					GameDataDto data = null;
+					int agame1 = rs.getInt(1);
+					int tgame1 = rs.getInt(2);
+					int agame2 = rs.getInt(3);
+					int tgame2 = rs.getInt(4);
+					int agame3 = rs.getInt(5);
+					int tgame3 = rs.getInt(6);
+					int agame4 = rs.getInt(7);
+					int tgame4 = rs.getInt(8);
+					int agame5 = rs.getInt(9);
+					int tgame5 = rs.getInt(10);
+
+					String day = rs.getString(11);
+					// GameDataDto 객체 만들고
+					data = new GameDataDto(dto.getId(), agame1, tgame1, agame2, tgame2, agame3, tgame3,
+							agame4, tgame4, agame5, tgame5, day);
+					// 벡터에 저장
+					vector.add(data);
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			return vector;
+		}
+	
+
+	
 	// 게임 종료 시 게임data 입력
 	public boolean insertGameData(GameDataDto dto) {
 		conn = ConnectionDB.getConnection();

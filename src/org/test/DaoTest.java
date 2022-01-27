@@ -4,13 +4,22 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.Vector;
 
-import org.model.GameDataDto;
 import org.model.UserDao;
-import org.model.UserDto;
+import org.server.GameDataDto;
+import org.server.UserDto;
 
 public class DaoTest {
 	public static UserDao dao = new UserDao();
 	
+	public static void main(String[] args) {
+		Vector<GameDataDto> vector = dao.roadOneGameData(new UserDto(0,null,"user2",null,0));
+		
+		System.out.println(vector.get(0).getId());
+		for(GameDataDto dto : vector) {
+			System.out.println(dto);
+		}
+		
+	}
 	public static void main_deleteTest(String[] args) {
 		boolean ok = dao.deleteUser(new UserDto(0, null, "user4", null, 0));
 		

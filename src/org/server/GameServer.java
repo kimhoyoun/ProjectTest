@@ -5,27 +5,31 @@ import java.awt.Container;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.OutputStreamWriter;
+import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
+import java.util.Vector;
 
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
 import org.model.UserDao;
-import org.model.UserDto;
 
 public class GameServer extends JFrame {
-	static HashMap hm = new HashMap();
+	public static final String LOGIN = "login";
+	public static final String NEWLOGIN = "newlogin";
+	public static final String SIGNUP = "signup";
+	public static final String IDCHECK = "idcheck";
+	public static final String LOGOUT = "logout";
+	
 	public static UserDao dao = new UserDao();
 	public static UserDto dto;
+	public static Vector<GameDataDto> vector;
 	private JTextArea serverState;
 	private ConnectClient cc;
 
@@ -66,8 +70,8 @@ public class GameServer extends JFrame {
 					serverState.append("클라이언트 접속 완료...\n");
 
 					// 클라이언트가 서버에 접속 시 해당 클라이언트와 메세지를 주고 받을 쓰레드 생성
-//					ServerThread sth = new ServerThread(socket);
-//					sth.start();
+					ServerThread sth = new ServerThread(socket);
+					sth.start();
 				}
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
@@ -81,20 +85,18 @@ public class GameServer extends JFrame {
 		private BufferedReader br = null;
 		private BufferedWriter bw = null;
 		private String userID;
-		private ObjectInputStream ois = null;
-		private ObjectOutputStream oos = null;
+		private ObjectInputStream ois;
+		private ObjectOutputStream oos;
 		private String guest = "guest" + (int) (Math.random() * 100 + 1);
-
+		private InputStream is;
+		private OutputStream os;
 		// 생성자에 socket을 받아 서버에 접속한 클라이언트의 socket정보를 받아옴.
 		public ServerThread(Socket socket) {
 			this.socket = socket;
 			try {
 				// 클라이언트와 메세지를 주고받기위해 입출력 스트림 생성
-				br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-				bw = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-				ois = new ObjectInputStream(socket.getInputStream());
 				oos = new ObjectOutputStream(socket.getOutputStream());
-
+				ois = new ObjectInputStream(socket.getInputStream());
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -106,56 +108,68 @@ public class GameServer extends JFrame {
 			while (true) {
 				try {
 					// 클라이언트로부터 메세지를 받을때까지 대기하면 받으면 msg 변수에 저장
-					String msg = br.readLine();
+					String msg = ois.readUTF();
 					serverState.append(guest + " >> " + msg + "\n");
 					// 중복검사,회원가입, 로그인, 종료
 					switch (msg) {
-					case "login":
+					case LOGIN:
 						login();
 						break;
-					case "signup":
+					case SIGNUP:
 						userSignUp();
 						break;
-					case "idCheck":
+					case IDCHECK:
 						idCheck();
 						break;
-					case "exit":
+					case LOGOUT:
 						logout();
 						break;
 					}
 
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
-				}
+				} 
 
 			}
 		}
 
 		private void login() {
 			try {
-				dto = (UserDto) ois.readObject();
+				dto = (UserDto)ois.readObject();
 				boolean approval = dao.loginApproval(dto);
 				
 				if (approval) {
 						dto = dao.selectOneUser(dto);
+						vector = dao.roadOneGameData(dto);
+						
 					if (dto != null) {
-						bw.write("success" + "\n");
-						bw.flush();
-						oos.writeObject(dto);
-						oos.flush();
-						serverState.append(guest + " >> Login Success! \n");
+						if(vector.size()!=0) {
+							oos.writeUTF(LOGIN);
+							oos.flush();
+							oos.writeObject(dto);
+							oos.flush();
+							oos.writeObject(vector);
+							oos.flush();
+							serverState.append(guest + " >> Login Success! \n");
+						}else {
+							oos.writeUTF(NEWLOGIN);
+							oos.flush();
+							oos.writeObject(dto);
+							oos.flush();
+							serverState.append(guest + " >> Login Success! (No Data) \n");
+						}
 					}
 				} else {
-					bw.write("fail" + "\n");
-					bw.flush();
+					dto = new UserDto(-1,null,null,null,0);
+					oos.writeUTF(LOGIN);
+					oos.flush();
+					oos.writeObject(dto);
+					oos.flush();
 					serverState.append(guest + " >> Login Fail \n");
 				}
 			} catch (ClassNotFoundException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 
@@ -163,43 +177,59 @@ public class GameServer extends JFrame {
 
 		private void userSignUp() {
 			try {
-				
 				dto = (UserDto) ois.readObject();
+				System.out.println(dto);
 				boolean state = dao.insertUser(dto);
+				
 				if (state) {
-					bw.write("complete" + "\n");
-					bw.flush();
-					serverState.append(guest + " >> Sign Up Complete \n");
+					oos.writeUTF(SIGNUP);
+					oos.flush();
+					oos.writeUTF("complete");
+					oos.flush();
+					serverState.append(guest + " >> Sign Up Complete "+"\n");
 				} else {
-					bw.write("fail" + "\n");
-					bw.flush();
+					oos.writeUTF(SIGNUP);
+					oos.flush();
+					oos.writeUTF("fail");
+					oos.flush();
 				}
 			} catch (ClassNotFoundException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
 
 		private void idCheck() {
 			try {
-				String userID = br.readLine();
+				// userID를 넘겨 받아서 userID에 저장
+				String userID = ois.readUTF();
+				// swing 출력
+				serverState.append(guest + " idckek>> "+userID + "\n");
+				// dao에 그 값을 넣고 id 중복여부 확인하고 결과를 check에 받음 true : id사용가능, false : id 중복
 				boolean check = dao.checkID(userID);
 				if (check) {
-					bw.write("approval" + "\n");
-					bw.flush();
-					serverState.append(guest + " >> ID Check Complete \n");
+					serverState.append(guest + " >> true\n");
+					// idcheck 요청의 결과임을 알려주는 메세지
+					oos.writeUTF(IDCHECK);
+					oos.flush();
+					// idcheck 요청의 결과값
+					oos.writeUTF("approval");
+					oos.flush();
+					serverState.append(guest + " >> ID Check Complete"+"\n");
 				} else {
-					bw.write("fail" + "\n");
-					bw.flush();
-					serverState.append(guest + " >> ID Check Complete \n");
+					serverState.append(guest + " >> false" +"\n");
+					// idcheck 요청의 결과임을 알려주는 메세지
+					oos.writeUTF(IDCHECK);
+					oos.flush();
+					// idcheck 요청의 결과값
+					oos.writeUTF("fail");
+					oos.flush();
+					serverState.append(guest + " >> ID Check Complete"+"\n");
 				}
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
-			}
+			} 
 		}
 
 		private void logout() {
