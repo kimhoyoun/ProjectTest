@@ -42,7 +42,7 @@ public class RecordView extends GameContainer{
 	
 	public void displaySetting() {
 		JLabel title = new JLabel("성적확인");
-		title.setFont(new Font("Gothic", Font.BOLD, 40));
+		title.setFont(new Font("맑은 고딕", Font.BOLD, 40));
 		background.add(pulusminusRecordBtn);
 		background.add(cardRecordBtn);
 		background.add(ballRecordBtn);

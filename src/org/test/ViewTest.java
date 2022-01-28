@@ -13,21 +13,27 @@ import org.view.GameContainer;
 public class ViewTest extends JFrame{
 	Container contentPane;
 	public ViewTest() {
-		displayView(MAINVIEW);
-	}
-	
-	public void displayView(GameContainer gc) {
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		this.setSize(FRAME_WIDTH, FRAME_HEIGHT);
 		contentPane = getContentPane();
-		
 		contentPane.setLayout(null);
+	}
+	
+	public void displayView(GameContainer gc) {
+		
 		gc.setBounds(0, 0, FRAME_WIDTH, FRAME_HEIGHT);
 		contentPane.add(gc);
-
+		NowView = gc;
 		this.setVisible(true);
 	}
-	public static void main(String[] args) {
-		new ViewTest();
+	
+	
+	public void changeView(GameContainer gc) {
+		contentPane.remove(NowView);
+		contentPane.add(gc);
+		NowView = gc;
+		gc.setBounds(0, 0, FRAME_WIDTH, FRAME_HEIGHT);
+		revalidate();
+		repaint();
 	}
 }

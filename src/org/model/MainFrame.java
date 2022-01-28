@@ -1,13 +1,5 @@
 package org.model;
 
-import static org.Resource.loginView;
-import static org.Resource.mainData;
-import static org.Resource.mainUser;
-import static org.Resource.FRAME_WIDTH;
-import static org.Resource.FRAME_HEIGHT;
-import static org.Resource.LOGIN;
-import static org.Resource.SIGNUP;
-import static org.Resource.IDCHECK;
 import static org.Resource.*;
 
 import java.awt.Container;
@@ -24,6 +16,9 @@ import java.util.Vector;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
+import org.controller.ViewController;
+import org.view.GameContainer;
+
 public class MainFrame extends JFrame implements ActionListener {
 	
 	Container contentPane;
@@ -39,13 +34,15 @@ public class MainFrame extends JFrame implements ActionListener {
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		this.setSize(FRAME_WIDTH, FRAME_HEIGHT);
 		contentPane = getContentPane();
-
 		contentPane.setLayout(null);
-		loginView.setBounds(0, 0, FRAME_WIDTH, FRAME_HEIGHT);
-		contentPane.add(loginView);
 
-		this.setVisible(true);
-
+//		loginView.setBounds(0, 0, FRAME_WIDTH, FRAME_HEIGHT);
+//		contentPane.add(loginView);
+//		this.setVisible(true);
+//		NowView = loginView;
+		
+//		displayView(loginView);
+		
 		idcheck.addActionListener(this);
 		signup.addActionListener(this);
 		LoginBtn.addActionListener(this);
@@ -56,7 +53,25 @@ public class MainFrame extends JFrame implements ActionListener {
 		th.start();
 
 	}
-
+	
+	public void displayView(GameContainer gc) {
+		
+		gc.setBounds(0, 0, FRAME_WIDTH, FRAME_HEIGHT);
+		contentPane.add(gc);
+		NowView = gc;
+		this.setVisible(true);
+	}
+	
+	
+	public void changeView(GameContainer gc) {
+		contentPane.remove(NowView);
+		contentPane.add(gc);
+		NowView = gc;
+		gc.setBounds(0, 0, FRAME_WIDTH, FRAME_HEIGHT);
+		revalidate();
+		repaint();
+	}
+	
 	public void connectServer() {
 		try {
 			// localHost ip, 9999 port에 접속
@@ -114,6 +129,7 @@ public class MainFrame extends JFrame implements ActionListener {
 					System.out.println(mainUser);
 					System.out.println("vector size >> " + mainData.size());
 					JOptionPane.showMessageDialog(loginView, "로그인 성공!");
+					changeView(MAINVIEW);
 				} else {
 					mainUser = null;
 					JOptionPane.showMessageDialog(loginView, "로그인 실패!");
@@ -134,12 +150,13 @@ public class MainFrame extends JFrame implements ActionListener {
 					Vector<GameDataDto> vector = (Vector) ois.readObject();
 					mainUser = user;
 					mainData = vector;
+					loginSucess = true;
 					System.out.println(mainUser);
 					for (GameDataDto data : vector) {
 						System.out.println(data);
 					}
 					JOptionPane.showMessageDialog(loginView, "로그인 성공!");
-
+					changeView(MAINVIEW);
 				} else {
 					mainUser = null;
 					JOptionPane.showMessageDialog(loginView, "ID와 PW를 다시 확인하세요...");
@@ -182,10 +199,10 @@ public class MainFrame extends JFrame implements ActionListener {
 		}
 	}
 
-	public static void main(String[] args) {
-		new MainFrame();
-	}
-
+//	public static void main(String[] args) {
+//		new MainFrame();
+//	}
+	
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == LoginBtn) {
@@ -270,4 +287,5 @@ public class MainFrame extends JFrame implements ActionListener {
 			}
 		}
 	}
+	
 }

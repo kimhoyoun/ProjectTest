@@ -4,15 +4,15 @@ import java.util.Vector;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import org.game.PlusMinus;
 import org.model.GameDataDto;
 import org.model.UserDto;
 import org.view.GameContainer;
 import org.view.LoginView;
 import org.view.MainView;
+import org.view.PlusMinusRecordView;
 import org.view.RecordView;
 
 public class Resource {
@@ -23,8 +23,22 @@ public class Resource {
 	public static final String IDCHECK = "idcheck";
 	public static final String LOGOUT = "logout";
 	
+	public static final String LOGINPAGE = "login";
+	public static final String MAINPAGE = "main";
+	public static final String PLUSMINUS = "plusminus";
+	public static final String CARD = "card";
+	public static final String BALL = "ball";
+	public static final String LIFE = "life";
+	public static final String COLOR = "color";
+	public static final String RECORD = "record";
+	public static final String PlisMinusRECORD = "plusminusRecord";
+	public static final String CardRECORD = "cardRecord";
+	public static final String LifeRECORD = "lifeRecord";
+	public static final String BallRECORD = "ballRecord";
+	public static final String ColorRECORD = "colorRecord";
 	
-	
+	public static boolean loginSucess =false;
+	public static int gameCount = 0;
 	public static UserDto mainUser;
 	public static Vector<GameDataDto> mainData;
 	
@@ -61,10 +75,18 @@ public class Resource {
 	public static JButton colorRecordBtn = new RoundJButton("Color");
 	public static JButton backBtn = new RoundJButton("Back");
 	
+	// PlusMinusGame
+	public static ImageIcon pauseIcon = new ImageIcon("images/pause.png");
+	public static JButton pauseBtn =new JButton(pauseIcon);
 	// View
+	
+	public static GameContainer NowView;
 	public static GameContainer loginView = new LoginView();
 	public static GameContainer MAINVIEW = new MainView();
 	public static GameContainer RECORDVIEW = new RecordView();
+	public static GameContainer PlusMinusGAME = new PlusMinus();
+	
+	public static GameContainer PlusMinisRecord = new PlusMinusRecordView();
 }
 
 

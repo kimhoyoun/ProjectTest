@@ -58,9 +58,9 @@ public class LoginView extends GameContainer {
 		JLabel loginID = new JLabel("I D");
 		JLabel loginPW = new JLabel("PW");
 
-		loginLabel.setFont(new Font("Gothic", Font.BOLD, 30));
-		loginID.setFont(new Font("Gothic", Font.BOLD, 20));
-		loginPW.setFont(new Font("Gothic", Font.BOLD, 20));
+		loginLabel.setFont(new Font("맑은 고딕", Font.BOLD, 30));
+		loginID.setFont(new Font("맑은 고딕", Font.BOLD, 20));
+		loginPW.setFont(new Font("맑은 고딕", Font.BOLD, 20));
 		
 		login.add(loginLabel);
 		login.add(loginID);
@@ -70,8 +70,8 @@ public class LoginView extends GameContainer {
 		loginID.setBounds(300/2-120, 350/2-80,40,40);
 		loginPW.setBounds(300/2-120, 350/2-20,40,40);
 
-		inputID.setFont(new Font("Gothic", Font.BOLD, 20));
-		inputPW.setFont(new Font("Gothic", Font.BOLD, 20));
+		inputID.setFont(new Font("맑은 고딕", Font.BOLD, 20));
+		inputPW.setFont(new Font("맑은 고딕", Font.BOLD, 20));
 
 		login.add(inputID);
 		login.add(inputPW);
@@ -102,11 +102,11 @@ public class LoginView extends GameContainer {
 		newUserPane.add(lblPass);
 		newUserPane.add(lblAge);
 		
-		newUserTitle.setFont(new Font("Gothic", Font.BOLD, 30));
-		lblName.setFont(new Font("Gothic", Font.BOLD, 18));
-		lblId.setFont(new Font("Gothic", Font.BOLD, 18));
-		lblPass.setFont(new Font("Gothic", Font.BOLD, 18));
-		lblAge.setFont(new Font("Gothic", Font.BOLD, 18));
+		newUserTitle.setFont(new Font("맑은 고딕", Font.BOLD, 30));
+		lblName.setFont(new Font("맑은 고딕", Font.BOLD, 18));
+		lblId.setFont(new Font("맑은 고딕", Font.BOLD, 18));
+		lblPass.setFont(new Font("맑은 고딕", Font.BOLD, 18));
+		lblAge.setFont(new Font("맑은 고딕", Font.BOLD, 18));
 		
 		newUserTitle.setBounds(90,20,150,40);
 		lblName.setBounds(48,100, 60, 20);
@@ -122,10 +122,10 @@ public class LoginView extends GameContainer {
 		newUserPane.add(signup);
 		newUserPane.add(cancel);
 
-		textname.setFont(new Font("Gothic", Font.BOLD, 20));
-		textid.setFont(new Font("Gothic", Font.BOLD, 20));
-		textpass.setFont(new Font("Gothic", Font.BOLD, 20));
-		textage.setFont(new Font("Gothic", Font.BOLD, 20));
+		textname.setFont(new Font("맑은 고딕", Font.BOLD, 20));
+		textid.setFont(new Font("맑은 고딕", Font.BOLD, 20));
+		textpass.setFont(new Font("맑은 고딕", Font.BOLD, 20));
+		textage.setFont(new Font("맑은 고딕", Font.BOLD, 20));
 		
 		textname.setBounds(100,100, 120, 25);
 		textid.setBounds(100,140, 120, 25);
