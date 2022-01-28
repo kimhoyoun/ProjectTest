@@ -9,8 +9,8 @@ import java.util.HashMap;
 import java.util.Vector;
 
 import org.db.ConnectionDB;
-import org.server.GameDataDto;
-import org.server.UserDto;
+import org.model.GameDataDto;
+import org.model.UserDto;
 
 public class UserDao {
 	// user table의 모든 데이터 갖고오기

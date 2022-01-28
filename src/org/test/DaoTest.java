@@ -4,9 +4,9 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.Vector;
 
+import org.model.GameDataDto;
 import org.model.UserDao;
-import org.server.GameDataDto;
-import org.server.UserDto;
+import org.model.UserDto;
 
 public class DaoTest {
 	public static UserDao dao = new UserDao();

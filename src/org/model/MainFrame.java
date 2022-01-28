@@ -1,8 +1,14 @@
-package org.server;
+package org.model;
 
-import static org.view.Vr.loginView;
-import static org.view.Vr.mainData;
-import static org.view.Vr.mainUser;
+import static org.Resource.loginView;
+import static org.Resource.mainData;
+import static org.Resource.mainUser;
+import static org.Resource.FRAME_WIDTH;
+import static org.Resource.FRAME_HEIGHT;
+import static org.Resource.LOGIN;
+import static org.Resource.SIGNUP;
+import static org.Resource.IDCHECK;
+import static org.Resource.*;
 
 import java.awt.Container;
 import java.awt.event.ActionEvent;
@@ -19,12 +25,7 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 public class MainFrame extends JFrame implements ActionListener {
-	public static final String LOGIN = "login";
-	public static final String NEWLOGIN = "newlogin";
-	public static final String SIGNUP = "signup";
-	public static final String IDCHECK = "idcheck";
-	public static final String LOGOUT = "logout";
-	int width = 1024, height = 768;
+	
 	Container contentPane;
 	private Socket socket = null;
 	public ObjectInputStream ois;
@@ -32,21 +33,22 @@ public class MainFrame extends JFrame implements ActionListener {
 	public String req;
 	public String resp;
 	public String msg;
-	boolean signup = false;
+	boolean signupState = false;
+
 	public MainFrame() {
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
-		this.setSize(width, height);
+		this.setSize(FRAME_WIDTH, FRAME_HEIGHT);
 		contentPane = getContentPane();
 
 		contentPane.setLayout(null);
-		loginView.setBounds(0, 0, width, height);
+		loginView.setBounds(0, 0, FRAME_WIDTH, FRAME_HEIGHT);
 		contentPane.add(loginView);
 
 		this.setVisible(true);
 
-		loginView.idcheck.addActionListener(this);
-		loginView.signup.addActionListener(this);
-		loginView.LoginBtn.addActionListener(this);
+		idcheck.addActionListener(this);
+		signup.addActionListener(this);
+		LoginBtn.addActionListener(this);
 
 		connectServer();
 
@@ -101,18 +103,18 @@ public class MainFrame extends JFrame implements ActionListener {
 				}
 			}
 		}
-		
+
 		private void newlogin() {
 			try {
-				UserDto user = (UserDto)ois.readObject();
-				
-				if(user.getNo() != -1) {
+				UserDto user = (UserDto) ois.readObject();
+
+				if (user.getNo() != -1) {
 					mainUser = user;
 					mainData = new Vector<GameDataDto>();
 					System.out.println(mainUser);
-					System.out.println("vector size >> "+mainData.size());
+					System.out.println("vector size >> " + mainData.size());
 					JOptionPane.showMessageDialog(loginView, "로그인 성공!");
-				}else {
+				} else {
 					mainUser = null;
 					JOptionPane.showMessageDialog(loginView, "로그인 실패!");
 				}
@@ -127,20 +129,20 @@ public class MainFrame extends JFrame implements ActionListener {
 
 		private void login() {
 			try {
-				UserDto user = (UserDto)ois.readObject();
-				if(user.getNo() != -1) {
-					Vector<GameDataDto> vector = (Vector)ois.readObject();
+				UserDto user = (UserDto) ois.readObject();
+				if (user.getNo() != -1) {
+					Vector<GameDataDto> vector = (Vector) ois.readObject();
 					mainUser = user;
 					mainData = vector;
 					System.out.println(mainUser);
-					for(GameDataDto data : vector) {
+					for (GameDataDto data : vector) {
 						System.out.println(data);
 					}
 					JOptionPane.showMessageDialog(loginView, "로그인 성공!");
-					
-				}else {
+
+				} else {
 					mainUser = null;
-					JOptionPane.showMessageDialog(loginView, "로그인 실패!");
+					JOptionPane.showMessageDialog(loginView, "ID와 PW를 다시 확인하세요...");
 				}
 			} catch (ClassNotFoundException e) {
 				// TODO Auto-generated catch block
@@ -154,9 +156,9 @@ public class MainFrame extends JFrame implements ActionListener {
 		private void signup() {
 			try {
 				String result = ois.readUTF();
-				if("complete".equals(result)) {
+				if ("complete".equals(result)) {
 					JOptionPane.showMessageDialog(loginView, "회원가입이 완료되었습니다!");
-				}else {
+				} else {
 					JOptionPane.showMessageDialog(loginView, "회원가입에 실패햇습니다!");
 				}
 			} catch (IOException e) {
@@ -167,12 +169,12 @@ public class MainFrame extends JFrame implements ActionListener {
 		public void idCheck() {
 			try {
 				String tf = ois.readUTF();
-				if("approval".equals(tf)) {
+				if ("approval".equals(tf)) {
 					JOptionPane.showMessageDialog(loginView, "사용할 수 있는 ID입니다!");
-					signup = true;
-				}else {
+					signupState = true;
+				} else {
 					JOptionPane.showMessageDialog(loginView, "사용할 수 없는 ID입니다...");
-					signup = false;
+					signupState = false;
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -186,40 +188,15 @@ public class MainFrame extends JFrame implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if(e.getSource() == loginView.LoginBtn) {
+		if (e.getSource() == LoginBtn) {
 			req = LOGIN;
-			String id = loginView.inputID.getText();
-			String pw = loginView.inputPW.getText();
-			
-			loginView.inputID.setText("");
-			loginView.inputPW.setText("");
-			UserDto user = new UserDto(0,null,id,pw,0);
-			
-			try {
-				oos.writeUTF(req);
-				oos.flush();
-				oos.writeObject(user);
-				oos.flush();
-			} catch (IOException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-		}
-		
-		if(e.getSource() == loginView.signup) {
-			if(signup) {
-				req = SIGNUP;
-				String name = loginView.name.getText();
-				String id = loginView.id.getText();
-				String pw = loginView.pass.getText();
-				int age = Integer.parseInt(loginView.age.getText());
+			String id = inputID.getText();
+			String pw = inputPW.getText();
 
-				loginView.name.setText("");
-				loginView.id.setText("");
-				loginView.pass.setText("");
-				loginView.age.setText("");
-				
-				UserDto user = new UserDto(0, name, id, pw, age);
+			if (id.length() != 0 && pw.length() != 0) {
+				inputID.setText("");
+				inputPW.setText("");
+				UserDto user = new UserDto(0, null, id, pw, 0);
 				try {
 					oos.writeUTF(req);
 					oos.flush();
@@ -229,34 +206,67 @@ public class MainFrame extends JFrame implements ActionListener {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
-			}else {
-				JOptionPane.showMessageDialog(loginView, "ID 중복체크를 해주세요!");				
+			} else {
+				JOptionPane.showMessageDialog(loginView, "ID와 PW를 모두 입력하세요!");
 			}
 		}
-		
-		
-		if (e.getSource() == loginView.idcheck) {
+
+		if (e.getSource() == signup) {
+			if (signupState) {
+				req = SIGNUP;
+				String newName = textname.getText();
+				String newId = textid.getText();
+				String newPw = textpass.getText();
+				int newAge = 0;
+				try {
+					newAge = Integer.parseInt(textage.getText());
+				}catch(NumberFormatException e0) {
+					JOptionPane.showMessageDialog(loginView, "나이는 숫자만 입력하세요!");
+				}
+
+				if (newName.length() != 0 && newId.length() != 0 && newPw.length() != 0
+						&& textage.getText().length() != 0) {
+					textname.setText("");
+					textid.setText("");
+					textpass.setText("");
+					textage.setText("");
+
+					UserDto user = new UserDto(0, newName, newId, newPw, newAge);
+					try {
+						oos.writeUTF(req);
+						oos.flush();
+						oos.writeObject(user);
+						oos.flush();
+					} catch (IOException e1) {
+						e1.printStackTrace();
+					}
+				} else {
+					JOptionPane.showMessageDialog(loginView, "모든 정보를 입력해 주세요");
+				}
+			} else {
+				JOptionPane.showMessageDialog(loginView, "ID 중복체크를 해주세요!");
+			}
+		}
+
+		if (e.getSource() == idcheck) {
 			// id 중복확인데 대한 요청임을 나타내는 req변수
 			req = IDCHECK;
 			// loginView의 회원가입에서 id를 입력하는 TextField의 값을 가져옴.
-			String userId = loginView.id.getText();
-			System.out.println("userId : "+userId);
-			System.out.print("userid check");
-			if("".equals(userId)) {
-				System.out.println("ok");
-			}else {
-				System.out.println("no");
-			}
-			try {
-				// 요청하는 것을 서버에 알려주기위해 req를 먼저 보낸다.
-				oos.writeUTF(req);
-				oos.flush();
-				
-				// 서버에 req를 보낸 후 실제 쓰일 값을 보냄.
-				oos.writeUTF(userId);
-				oos.flush();
-			} catch (IOException e1) {
-				e1.printStackTrace();
+			String userId = textid.getText();
+			if (userId.length() != 0) {
+				try {
+					// 요청하는 것을 서버에 알려주기위해 req를 먼저 보낸다.
+					oos.writeUTF(req);
+					oos.flush();
+
+					// 서버에 req를 보낸 후 실제 쓰일 값을 보냄.
+					oos.writeUTF(userId);
+					oos.flush();
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+			} else {
+				JOptionPane.showMessageDialog(loginView, "ID를 입력하세요!");
 			}
 		}
 	}

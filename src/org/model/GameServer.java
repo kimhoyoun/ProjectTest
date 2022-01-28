@@ -1,4 +1,6 @@
-package org.server;
+package org.model;
+
+import static org.Resource.*;
 
 import java.awt.BorderLayout;
 import java.awt.Container;
@@ -11,21 +13,18 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.HashMap;
 import java.util.Vector;
 
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
-import org.model.UserDao;
-
 public class GameServer extends JFrame {
-	public static final String LOGIN = "login";
-	public static final String NEWLOGIN = "newlogin";
-	public static final String SIGNUP = "signup";
-	public static final String IDCHECK = "idcheck";
-	public static final String LOGOUT = "logout";
+//	public static final String LOGIN = "login";
+//	public static final String NEWLOGIN = "newlogin";
+//	public static final String SIGNUP = "signup";
+//	public static final String IDCHECK = "idcheck";
+//	public static final String LOGOUT = "logout";
 	
 	public static UserDao dao = new UserDao();
 	public static UserDto dto;
