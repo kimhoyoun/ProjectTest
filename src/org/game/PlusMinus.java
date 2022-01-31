@@ -101,6 +101,7 @@ public class PlusMinus extends GameContainer {
 		this.add(xLabel);
 		xLabel.setVisible(false);
 
+		
 //		gameResultPane = new JPanel();
 		
 //		gameResultPane.setBounds(FRAME_WIDTH/2-300/2, FRAME_HEIGHT/2-350/2, 300, 350);
@@ -169,8 +170,9 @@ public class PlusMinus extends GameContainer {
 //	}
 	@Override
 	public void actionPerformed(ActionEvent e) { 
-		gameNum++;
+		
 		if (e.getSource() == choiceBtn[0]) {
+			gameNum++;
 			choiceBtn[0].setBackground(Color.RED);
 			
 			if (gp.answer == Integer.parseInt(choiceBtn[0].getText())) {
@@ -186,6 +188,7 @@ public class PlusMinus extends GameContainer {
 			}
 		}
 		if (e.getSource() == choiceBtn[1]) {
+			gameNum++;
 			choiceBtn[1].setBackground(Color.RED);
 			if (gp.answer == Integer.parseInt(choiceBtn[1].getText())) {
 				gametrue++;
@@ -199,6 +202,7 @@ public class PlusMinus extends GameContainer {
 			}
 		}
 		if (e.getSource() == choiceBtn[2]) {
+			gameNum++;
 			choiceBtn[2].setBackground(Color.RED);
 			if (gp.answer == Integer.parseInt(choiceBtn[2].getText())) {
 				gametrue++;
@@ -212,6 +216,7 @@ public class PlusMinus extends GameContainer {
 			}
 		}
 		if (e.getSource() == choiceBtn[3]) {
+			gameNum++;
 			choiceBtn[3].setBackground(Color.RED);
 			if (gp.answer == Integer.parseInt(choiceBtn[3].getText())) {
 				gametrue++;
@@ -234,7 +239,6 @@ public class PlusMinus extends GameContainer {
 		
 		// 딜레이 1.5초 주고 다음게임 시작
 		timer = new Timer(1500, new ActionListener() {
-
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if(gameNum>=endGameNum) {

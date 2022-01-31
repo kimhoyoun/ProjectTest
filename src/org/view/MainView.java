@@ -15,6 +15,7 @@ import static org.Resource.textage;
 import static org.Resource.textid;
 import static org.Resource.textname;
 import static org.Resource.textpass;
+import static org.Resource.*;
 
 import java.awt.Color;
 import java.awt.Dialog;
@@ -31,17 +32,21 @@ import javax.swing.JToggleButton;
 public class MainView extends GameContainer{
 	ImageIcon backgroundImg;
 	JLabel background;
-	JPanel profile = new JPanel();
 	JButton settingBtn = new JButton("!");
 	JButton updateBtn = new JButton("!");
-	JButton profileOkBtn = new JButton("수정");
-	JButton profileCancelBtn = new JButton("취소");
+	JButton profileCancelBtn = new JButton("돌아가기");
 	String userId = "유저000";
 	String userName = "홍길동";
 	String userPass = "비밀번호";
 	int userAge = 74; 
-	JLabel idtag = new JLabel(userId);
-	JLabel infotag = new JLabel("이름 : "+userName+" 나이 : "+userAge);
+	
+	
+	JPanel profile = new JPanel();
+//	JLabel idtag = new JLabel(userId);
+//	JLabel infotag = new JLabel("이름 : "+userNamedb+" 나이 : "+userAgedb);
+	JLabel idtag;
+	JLabel infotag;
+	
 	boolean updateBtnState = false;
 	JPanel profileUpdate;
 	
@@ -51,6 +56,7 @@ public class MainView extends GameContainer{
 	
 	@Override
 	public void gamePlay() {
+		
 		backgroundImg = new ImageIcon("images/mainBack.png");
 		background = new JLabel(backgroundImg);
 		
@@ -66,16 +72,23 @@ public class MainView extends GameContainer{
 		setCreateBox();
 		JLabel title = new JLabel("메인화면");
 		title.setFont(new Font("맑은 고딕", Font.BOLD, 40));
-		idtag.setFont(new Font("맑은 고딕", Font.BOLD, 15));
-		infotag.setFont(new Font("맑은 고딕", Font.BOLD, 13));
+//		idtag.setFont(new Font("맑은 고딕", Font.BOLD, 15));
+//		infotag.setFont(new Font("맑은 고딕", Font.BOLD, 13));
+
+		idtagdb.setFont(new Font("맑은 고딕", Font.BOLD, 15));
+		infotagdb.setFont(new Font("맑은 고딕", Font.BOLD, 13));
 		
 		profile.setLayout(null);
 		
-		profile.add(idtag);
-		profile.add(infotag);
+//		profile.add(idtag);
+//		profile.add(infotag);
+		profile.add(idtagdb);
+		profile.add(infotagdb);
 		profile.add(settingBtn);
-		idtag.setBounds(75,5,150,40);
-		infotag.setBounds(25,35,170,40);
+//		idtag.setBounds(75,5,150,40);
+//		infotag.setBounds(25,35,170,40);
+		idtagdb.setBounds(75,5,150,40);
+		infotagdb.setBounds(25,35,170,40);
 		settingBtn.setBounds(160,10,30,30);
 		
 		background.add(profileUpdate);
@@ -122,6 +135,11 @@ public class MainView extends GameContainer{
 			exitBtn.setEnabled(false);
 			settingBtn.setEnabled(false);
 			
+			textname.setText(userNamedb);
+			textid.setText(userIddb);
+			textpass.setText(userPassdb);
+			textage.setText(userAgedb+"");
+			
 			profileUpdate.setVisible(true);
 			
 			revalidate();
@@ -129,40 +147,40 @@ public class MainView extends GameContainer{
 		}
 		
 		if(e.getSource() == updateBtn) {
-			if(!updateBtnState) {
+			if(!updateBtnStatedb) {
 				textname.setEditable(true);
 				textpass.setEditable(true);
 				textage.setEditable(true);
-				updateBtnState = true;
+				updateBtnStatedb = true;
 			}else {
 				textname.setEditable(false);
 				textpass.setEditable(false);
 				textage.setEditable(false);
-				updateBtnState = false;
+				updateBtnStatedb = false;
 			}
 		}
 		
-		if(e.getSource() == profileOkBtn) {
-			int yn = JOptionPane.showConfirmDialog(this, "프로필을 수정하시겠습니까?","확인",JOptionPane.YES_NO_OPTION);
-				
-			if(yn == 0) {
-				userName = textname.getText();
-				userPass = textpass.getText();
-				try {
-					userAge = Integer.parseInt(textage.getText());
-				}catch(NumberFormatException e0) {
-					JOptionPane.showMessageDialog(this, "나이는 숫자만 입력하세요!");
-					textage.setText(userAge+"");
-					return;
-				}
-				JOptionPane.showMessageDialog(this, "수정 완료!");
-				infotag.setText("이름 : "+userName+" 나이 : "+userAge);
-				textname.setEditable(false);
-				textpass.setEditable(false);
-				textage.setEditable(false);
-				updateBtnState = false;
-			}
-		}
+//		if(e.getSource() == profileOkBtn) {
+//			int yn = JOptionPane.showConfirmDialog(this, "프로필을 수정하시겠습니까?","확인",JOptionPane.YES_NO_OPTION);
+//				
+//			if(yn == 0) {
+//				userName = textname.getText();
+//				userPass = textpass.getText();
+//				try {
+//					userAge = Integer.parseInt(textage.getText());
+//				}catch(NumberFormatException e0) {
+//					JOptionPane.showMessageDialog(this, "나이는 숫자만 입력하세요!");
+//					textage.setText(userAge+"");
+//					return;
+//				}
+//				
+//				infotag.setText("이름 : "+userName+" 나이 : "+userAge);
+//				textname.setEditable(false);
+//				textpass.setEditable(false);
+//				textage.setEditable(false);
+//				updateBtnState = false;
+//			}
+//		}
 		
 		if(e.getSource() == profileCancelBtn) {
 			pulusminusGameBtn.setEnabled(true);
@@ -182,6 +200,14 @@ public class MainView extends GameContainer{
 	}
 	public void setCreateBox() {
 		profileUpdate = new JPanel();
+		
+		userIddb = mainUser.getId();
+		userNamedb = mainUser.getName();
+		userPassdb = mainUser.getPassword();
+		userAgedb = mainUser.getAge(); 
+		
+		idtagdb = new JLabel(userIddb);
+		infotagdb = new JLabel("이름 : "+userNamedb+" 나이 : "+userAgedb);
 		
 		JLabel newUserTitle = new JLabel("프로필");
 		JLabel lblName = new JLabel("이름 : ");
@@ -223,11 +249,16 @@ public class MainView extends GameContainer{
 		textpass.setFont(new Font("맑은 고딕", Font.BOLD, 20));
 		textage.setFont(new Font("맑은 고딕", Font.BOLD, 20));
 		
-		textname.setText(userName);
-		textid.setText(userId);
-		textpass.setText(userPass);
-		textage.setText(userAge+"");
+//		textname.setText(userName);
+//		textid.setText(userId);
+//		textpass.setText(userPass);
+//		textage.setText(userAge+"");
 		
+		textname.setText(userNamedb);
+		textid.setText(userIddb);
+		textpass.setText(userPassdb);
+		textage.setText(userAgedb+"");
+
 		textname.setEditable(false);
 		textid.setEditable(false);
 		textpass.setEditable(false);

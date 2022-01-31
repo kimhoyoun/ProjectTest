@@ -20,6 +20,7 @@ import javax.swing.JOptionPane;
 
 import org.controller.ViewController;
 import org.view.GameContainer;
+import org.view.MainView;
 
 public class MainFrame extends JFrame implements ActionListener {
 	
@@ -48,7 +49,8 @@ public class MainFrame extends JFrame implements ActionListener {
 		idcheck.addActionListener(this);
 		signup.addActionListener(this);
 		LoginBtn.addActionListener(this);
-
+		profileOkBtn.addActionListener(this);
+		
 		connectServer();
 
 		ClientThread th = new ClientThread();
@@ -73,35 +75,35 @@ public class MainFrame extends JFrame implements ActionListener {
 		repaint();
 	}
 	
-	public static void endGame() {
-		
-		gameResultPane.setLayout(null);
-		JLabel gameNumlbl = new JLabel("총 도전 횟수 : "+gameNum);
-		JLabel gametruelbl = new JLabel("정답 : "+gametrue);
-		JLabel gameEndmsg = new JLabel("게임결과");
-		
-		gameEndmsg.setFont(new Font("맑은 고딕", Font.BOLD, 30));
-		gameNumlbl.setFont(new Font("맑은 고딕", Font.BOLD, 20));
-		gametruelbl.setFont(new Font("맑은 고딕", Font.BOLD, 20));
-		
-		
-		gameResultPane.add(gameEndmsg);
-		gameResultPane.add(gameNumlbl);
-		gameResultPane.add(gametruelbl);
-		gameResultPane.add(replayBtn);
-		gameResultPane.add(goMainBtn);
-		
-		replayBtn.setBounds(10,290,120,50);
-		goMainBtn.setBounds(160,290,120,50);
-		
-		gameEndmsg.setBounds(95, 20, 200, 30);
-		gameNumlbl.setBounds(85, 90, 200, 30);
-		gametruelbl.setBounds(120, 150, 100, 30);
-		
-		gameResultPane.setVisible(true);
-//		replayBtn.addActionListener(this);
-		
-	}
+//	public static void endGame() {
+//		
+//		gameResultPane.setLayout(null);
+//		JLabel gameNumlbl = new JLabel("총 도전 횟수 : "+gameNum);
+//		JLabel gametruelbl = new JLabel("정답 : "+gametrue);
+//		JLabel gameEndmsg = new JLabel("게임결과");
+//		
+//		gameEndmsg.setFont(new Font("맑은 고딕", Font.BOLD, 30));
+//		gameNumlbl.setFont(new Font("맑은 고딕", Font.BOLD, 20));
+//		gametruelbl.setFont(new Font("맑은 고딕", Font.BOLD, 20));
+//		
+//		
+//		gameResultPane.add(gameEndmsg);
+//		gameResultPane.add(gameNumlbl);
+//		gameResultPane.add(gametruelbl);
+//		gameResultPane.add(replayBtn);
+//		gameResultPane.add(goMainBtn);
+//		
+//		replayBtn.setBounds(10,290,120,50);
+//		goMainBtn.setBounds(160,290,120,50);
+//		
+//		gameEndmsg.setBounds(95, 20, 200, 30);
+//		gameNumlbl.setBounds(85, 90, 200, 30);
+//		gametruelbl.setBounds(120, 150, 100, 30);
+//		
+//		gameResultPane.setVisible(true);
+////		replayBtn.addActionListener(this);
+//		
+//	}
 	
 	public void connectServer() {
 		try {
@@ -143,10 +145,36 @@ public class MainFrame extends JFrame implements ActionListener {
 					case IDCHECK:
 						idCheck();
 						break;
+					case UserUPDATE:
+						userUpdate();
+						break;
 					}
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
+			}
+		}
+
+		private void userUpdate() {
+			try {
+				String result = ois.readUTF();
+				if ("complete".equals(result)) {
+					JOptionPane.showMessageDialog(MAINVIEW, "정보수정이 완료되었습니다!");
+					mainUser.setName(userNamedb);
+					mainUser.setPassword(userPassdb);
+					mainUser.setAge(userAgedb);
+					
+					infotagdb.setText("이름 : "+userNamedb+" 나이 : "+userAgedb);
+					textname.setEditable(false);
+					textpass.setEditable(false);
+					textage.setEditable(false);
+					updateBtnStatedb = false;
+					
+				} else {
+					JOptionPane.showMessageDialog(MAINVIEW, "오류로 인해 정보수정에 실패햇습니다!");
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
 		}
 
@@ -160,6 +188,8 @@ public class MainFrame extends JFrame implements ActionListener {
 					System.out.println(mainUser);
 					System.out.println("vector size >> " + mainData.size());
 					JOptionPane.showMessageDialog(loginView, "로그인 성공!");
+					
+					viewCreate();
 					changeView(MAINVIEW);
 				} else {
 					mainUser = null;
@@ -187,6 +217,8 @@ public class MainFrame extends JFrame implements ActionListener {
 						System.out.println(data);
 					}
 					JOptionPane.showMessageDialog(loginView, "로그인 성공!");
+					viewCreate();
+//					MAINVIEW = new MainView();
 					changeView(MAINVIEW);
 				} else {
 					mainUser = null;
@@ -317,6 +349,39 @@ public class MainFrame extends JFrame implements ActionListener {
 				JOptionPane.showMessageDialog(loginView, "ID를 입력하세요!");
 			}
 		}
+		
+		if(e.getSource() == profileOkBtn) {
+			req = UserUPDATE;
+			int yn = JOptionPane.showConfirmDialog(this, "프로필을 수정하시겠습니까?","확인",JOptionPane.YES_NO_OPTION);
+			
+			if(yn == 0) {
+				userNamedb = textname.getText();
+				userPassdb = textpass.getText();
+				try {
+					userAgedb = Integer.parseInt(textage.getText());
+				}catch(NumberFormatException e0) {
+					JOptionPane.showMessageDialog(this, "나이는 숫자만 입력하세요!");
+					textage.setText(userAgedb+"");
+					return;
+				}
+				
+				UserDto updateUser = new UserDto(0,userNamedb,userIddb,userPassdb,userAgedb);
+				try {
+					oos.writeUTF(req);
+					oos.flush();
+					
+					oos.writeObject(updateUser);
+					oos.flush();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				
+				
+			}
+		}
 	}
-	
+//	public static void main(String[] args) {
+//		new MainFrame().displayView(loginView);
+//	}
 }

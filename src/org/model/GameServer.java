@@ -123,12 +123,42 @@ public class GameServer extends JFrame {
 					case LOGOUT:
 						logout();
 						break;
+					case UserUPDATE:
+						userUpdate();
+						break;
 					}
 
 				} catch (IOException e) {
 					e.printStackTrace();
 				} 
 
+			}
+		}
+
+		private void userUpdate() {
+			try {
+				dto = (UserDto)ois.readObject();
+				boolean approval = dao.updateUser(dto);
+				
+				if(approval) {
+					oos.writeUTF(UserUPDATE);
+					oos.flush();
+					oos.writeUTF("complete");
+					oos.flush();
+					serverState.append(guest + " >> Update Complete "+"\n");
+				}
+				else {
+					oos.writeUTF(UserUPDATE);
+					oos.flush();
+					oos.writeUTF("fail");
+					oos.flush();
+				}
+			} catch (ClassNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 		}
 

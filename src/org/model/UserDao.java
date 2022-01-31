@@ -100,7 +100,7 @@ public class UserDao {
 				String password = rs.getString(4);
 				int age = rs.getInt(5);
 				
-				user = new UserDto(no,name, id, name, age);
+				user = new UserDto(no,name, id, password, age);
 			}
 		
 		} catch (SQLException e) {
@@ -225,6 +225,7 @@ public class UserDao {
 		// 로그인 승인
 		// 아이디 비밀번호 일치하는 객체가 있으면 true 반환
 		public boolean loginApproval(UserDto dto) {
+			init();
 			if(userVector.contains(dto)) {
 				return true;
 			}
@@ -233,6 +234,7 @@ public class UserDao {
 		
 		// ID 중복체크
 		public boolean checkID(String userID) {
+			init();
 			for(int i= 0; i<userVector.size(); i++) {
 				if(userID.equals(userVector.get(i).getId())){
 					return false;
@@ -315,8 +317,6 @@ public class UserDao {
 			}
 			return vector;
 		}
-	
-
 	
 	// 게임 종료 시 게임data 입력
 	public boolean insertGameData(GameDataDto dto) {
