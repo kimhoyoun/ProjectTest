@@ -1,15 +1,5 @@
 package org.controller;
 
-import static org.Resource.LOGINPAGE;
-import static org.Resource.MAINPAGE;
-import static org.Resource.MAINVIEW;
-import static org.Resource.NowView;
-import static org.Resource.RECORD;
-import static org.Resource.RECORDVIEW;
-import static org.Resource.backBtn;
-import static org.Resource.exitBtn;
-import static org.Resource.loginView;
-import static org.Resource.recordBtn;
 import static org.Resource.*;
 
 import java.awt.event.ActionEvent;
@@ -45,7 +35,8 @@ public static ViewTest vt = new ViewTest();
 		viewControll.put(LOGINPAGE,loginView);
 		viewControll.put(MAINPAGE,MAINVIEW);
 		viewControll.put(RECORD,RECORDVIEW);
-		viewControll.put(PLUSMINUS,PlusMinusGAME);
+		viewControll.put(PLUSMINUS, PlusMinusGAME);
+//		viewControll.put(PLUSMINUS, new PlusMinus());
 //		viewControll.put(MAINPAGE,MAINVIEW);
 //		viewControll.put(MAINPAGE,MAINVIEW);
 	}
@@ -58,6 +49,8 @@ public static ViewTest vt = new ViewTest();
 		exitBtn.addActionListener(this);
 		pulusminusGameBtn.addActionListener(this);
 		pauseBtn.addActionListener(this);
+		goMainBtn.addActionListener(this);
+		replayBtn.addActionListener(this);
 	}
 	
 @Override
@@ -77,13 +70,35 @@ public void actionPerformed(ActionEvent e) {
 	}
 	
 	if(e.getSource() == pulusminusGameBtn) {
-		vt.changeView(new PlusMinus());			
+		vt.changeView(viewControll.get(PLUSMINUS));			
 	}
+	
+	if(e.getSource() == goMainBtn) {
+		gameNum = 0;
+		gametrue = 0;
+		endGameNum = 2;
+		gameResultPane.setVisible(false);
+		gameResultPane.removeAll();
+		NowView.reGame();
+		JOptionPane.showMessageDialog(NowView, "게임을 종료합니다!");
+		vt.changeView(viewControll.get(MAINPAGE));
+	}
+	if(e.getSource() == replayBtn) {
+		endGameNum += 2;
+		gameResultPane.setVisible(false);
+		gameResultPane.removeAll();
+		JOptionPane.showMessageDialog(NowView, "game Replay");
+		NowView.reGame();
+		vt.changeView(NowView);
+	}
+	
 	
 	if(e.getSource() == pauseBtn) {
 		JOptionPane.showMessageDialog(NowView, "Game 종료!");
 		vt.changeView(viewControll.get(MAINPAGE));
 	}
+	
+	
 	}
 
 public static void main(String[] args) {

@@ -3,6 +3,7 @@ package org.model;
 import static org.Resource.*;
 
 import java.awt.Container;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
@@ -14,6 +15,7 @@ import java.net.UnknownHostException;
 import java.util.Vector;
 
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
 import org.controller.ViewController;
@@ -55,7 +57,6 @@ public class MainFrame extends JFrame implements ActionListener {
 	}
 	
 	public void displayView(GameContainer gc) {
-		
 		gc.setBounds(0, 0, FRAME_WIDTH, FRAME_HEIGHT);
 		contentPane.add(gc);
 		NowView = gc;
@@ -70,6 +71,36 @@ public class MainFrame extends JFrame implements ActionListener {
 		gc.setBounds(0, 0, FRAME_WIDTH, FRAME_HEIGHT);
 		revalidate();
 		repaint();
+	}
+	
+	public static void endGame() {
+		
+		gameResultPane.setLayout(null);
+		JLabel gameNumlbl = new JLabel("총 도전 횟수 : "+gameNum);
+		JLabel gametruelbl = new JLabel("정답 : "+gametrue);
+		JLabel gameEndmsg = new JLabel("게임결과");
+		
+		gameEndmsg.setFont(new Font("맑은 고딕", Font.BOLD, 30));
+		gameNumlbl.setFont(new Font("맑은 고딕", Font.BOLD, 20));
+		gametruelbl.setFont(new Font("맑은 고딕", Font.BOLD, 20));
+		
+		
+		gameResultPane.add(gameEndmsg);
+		gameResultPane.add(gameNumlbl);
+		gameResultPane.add(gametruelbl);
+		gameResultPane.add(replayBtn);
+		gameResultPane.add(goMainBtn);
+		
+		replayBtn.setBounds(10,290,120,50);
+		goMainBtn.setBounds(160,290,120,50);
+		
+		gameEndmsg.setBounds(95, 20, 200, 30);
+		gameNumlbl.setBounds(85, 90, 200, 30);
+		gametruelbl.setBounds(120, 150, 100, 30);
+		
+		gameResultPane.setVisible(true);
+//		replayBtn.addActionListener(this);
+		
 	}
 	
 	public void connectServer() {

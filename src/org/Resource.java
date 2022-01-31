@@ -4,6 +4,8 @@ import java.util.Vector;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import org.game.PlusMinus;
@@ -38,9 +40,14 @@ public class Resource {
 	public static final String ColorRECORD = "colorRecord";
 	
 	public static boolean loginSucess =false;
-	public static int gameCount = 0;
+	public static int gameNum =0;
+	public static int gametrue=0;
+	public static int endGameNum = 2;
 	public static UserDto mainUser;
 	public static Vector<GameDataDto> mainData;
+	
+	
+	public static JPanel gameResultPane = new JPanel();
 	
 	
 	// login View
@@ -78,6 +85,10 @@ public class Resource {
 	// PlusMinusGame
 	public static ImageIcon pauseIcon = new ImageIcon("images/pause.png");
 	public static JButton pauseBtn =new JButton(pauseIcon);
+	
+	
+	public static JButton goMainBtn = new JButton("메인화면으로");
+	public static JButton replayBtn = new JButton("다시시작");
 	// View
 	
 	public static GameContainer NowView;
